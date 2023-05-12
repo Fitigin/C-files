@@ -5,16 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="600">
     <Grid>
-        <ListBox x:Name="listBox1" Height="300" Width="600" HorizontalContentAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ListBox x:Name="listBox1" HorizontalContentAlignment="Left" Grid.Column="0" Grid.Row="1" Margin="10">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="25"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
                         <Ellipse Grid.Column="0" Fill="{Binding Color}"/>
                         <TextBlock Grid.Column="1" Text="{Binding Name}"/>
@@ -23,5 +33,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <TextBlock HorizontalAlignment="Left" Height="18" Margin="10" Text="Top 5 Cryptocurrencies:" VerticalAlignment="Center" Width="200"
+                   FontWeight="Bold" Grid.Column="0" Grid.Row="0"/>
+
+        <ListBox Name="listBox2" HorizontalContentAlignment="Left" Grid.Column="1" Grid.Row="1" Margin="10"
+                 ItemsSource="{Binding FilteredCoins}"/>
+        
+        <TextBox Name="searchBox" TextWrapping="Wrap" Grid.Column="1" Grid.Row="0"
+                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="102,0,0,10"/>
+        
+        <TextBlock Grid.Column="1" Grid.Row="0" Margin="0,0,203,10">Currency search</TextBlock>
     </Grid>
 </Window>

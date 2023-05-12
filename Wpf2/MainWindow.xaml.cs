@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,19 +21,49 @@ namespace Wpf2
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private string _searchText;
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set 
+            {
+                _searchText = value;
+
+                OnPropertyChanged("SearchText");
+                OnPropertyChanged("FilteredCoins");
+            }
+        }
+
+        public List<string> CoinList { get; set; }
+
+        public IEnumerable<string> FilteredCoins
+        {
+            get
+            {
+                if (SearchText == null) return CoinList;
+
+                return CoinList.Where(x => x.ToUpper().StartsWith(SearchText.ToUpper()));
+            }
+        }
+        
         public MainWindow()
         {
             InitializeComponent();
-            List<CoinModel> coins = new List<CoinModel>
-            {
-                new CoinModel { Color = new SolidColorBrush(Colors.Red), Id = 1, Name = "BitCoin" },
-                new CoinModel { Color = new SolidColorBrush(Colors.Blue), Id = 2, Name = "LiteCoin" },
-                new CoinModel { Color = new SolidColorBrush(Colors.Green), Id = 3, Name = "Solana" }
-            };
+            listBox1.ItemsSource = CoinViewModel.Coins;
 
-            listBox1.ItemsSource = coins;
+            CoinList = CoinViewModel.names;
+            this.DataContext = this;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void OnPropertyChanged(string property)
+        {
+            if(PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
     }
 }
